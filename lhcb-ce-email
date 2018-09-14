@@ -22,7 +22,7 @@ condor_history \
   -f '%d,' ProcId \
   -f '%s,' LastRemoteHost \
   -f '%d,' NumJobStarts \
-  -f '%d,' CommittedTime \
+  -f '%d,' 'ifThenElse(CommittedTime=?=0,RemoteWallClockTime,CommittedTime)' \
   -f '%d,' 'RemoteSysCpu + RemoteUserCpu' \
   -f '%d,' RemoteWallClockTime \
   -f '%d\n' 'CumulativeRemoteSysCpu + CumulativeRemoteUserCpu'
