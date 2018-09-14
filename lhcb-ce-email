@@ -1,0 +1,33 @@
+#!/bin/bash
+
+LAST_SUNDAY=$(date -d 'last sunday' +%s)
+PREV_SUNDAY=$(date -d 'last sunday - 1 week' +%s)
+START_CYMD=$(date -d 'last sunday - 1 week' +%F)
+END_CYMD=$(date -d 'last sunday - 1 day' +%F)
+SUBJECT="LHCb Usage Report: $START_CYMD to $END_CYMD"
+ATTACH=$HOME/lhcb-usage/lhcb-usage_${START_CYMD}_${END_CYMD}.csv
+TO=(
+    edquist@cs.wisc.edu
+    blin@cs.wisc.edu
+    matyas@cs.wisc.edu
+)
+
+{
+echo "JobID,LastRemoteHost,NumJobStarts,WallClock,CPU,Cumulative_WallClock,Cumulative_CPU"
+condor_history \
+  -since \
+  "JobStatus != 3 && Owner == \"nu_lhcb\" && CompletionDate < $PREV_SUNDAY" \
+  -const "Owner =?= \"nu_lhcb\" && CompletionDate < $LAST_SUNDAY" \
+  -f '%d.' ClusterId \
+  -f '%d,' ProcId \
+  -f '%s,' LastRemoteHost \
+  -f '%d,' NumJobStarts \
+  -f '%d,' CommittedTime \
+  -f '%d,' 'RemoteSysCpu + RemoteUserCpu' \
+  -f '%d,' RemoteWallClockTime \
+  -f '%d\n' 'CumulativeRemoteSysCpu + CumulativeRemoteUserCpu'
+} > "$ATTACH"
+
+echo "(See attached CSV)" |
+mailx -s "$SUBJECT" -a "$ATTACH" -r edquist@cs.wisc.edu ${TO[@]}
+
