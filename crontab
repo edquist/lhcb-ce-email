@@ -1,0 +1,2 @@
+# 5am Mondays
+0 5 * * mon ~/lhcb-ce-email/lhcb-ce-email
