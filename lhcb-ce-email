@@ -6,6 +6,7 @@ START_CYMD=$(date -d 'last sunday - 1 week' +%F)
 END_CYMD=$(date -d 'last sunday - 1 day' +%F)
 SUBJECT="LHCb Usage Report: $START_CYMD to $END_CYMD"
 ATTACH=$HOME/lhcb-usage/lhcb-usage_${START_CYMD}_${END_CYMD}.csv
+FROM=$USER@cs.wisc.edu
 TO=(
     miron@cs.wisc.edu
     edquist@cs.wisc.edu
@@ -30,5 +31,5 @@ condor_history \
 } > "$ATTACH"
 
 echo "(See attached CSV)" |
-mailx -s "$SUBJECT" -a "$ATTACH" -r edquist@cs.wisc.edu ${TO[@]}
+mailx -s "$SUBJECT" -a "$ATTACH" -r $FROM ${TO[@]}
 
