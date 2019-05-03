@@ -30,6 +30,9 @@ condor_history \
   -f '%d\n' 'CumulativeRemoteSysCpu + CumulativeRemoteUserCpu'
 } > "$ATTACH"
 
-echo "(See attached CSV)" |
+echo "(See attached CSV)
+
+Dashboard view:
+http://monitor0.chtc.wisc.edu/grafana/dashboard/db/lhcb-usage" |
 mailx -s "$SUBJECT" -a "$ATTACH" -r $FROM ${TO[@]}
 
